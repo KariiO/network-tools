@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Tools</title>
+    <link rel="stylesheet" href="css/default.css">
+</head>
+<body>
+<div class="container-fluid main-container">
+    <div class="row">
+        <!-- SIDEBAR NAVIGATION -->
+        <div class="col-2 navigation">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="link-trace-route-tab" data-toggle="pill" href="#link-trace-route"
+                   role="tab"
+                   aria-controls="link-trace-route" aria-selected="true">TRACE ROUTE</a>
+                <a class="nav-link" id="link-ping-tab" data-toggle="pill" href="#link-ping" role="tab"
+                   aria-controls="link-ping" aria-selected="false">PING</a>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="tab-content" id="v-pills-tabContent">
+
+                <!-- TRACE ROUTE TAB -->
+                <div class="tab-pane fade show active" id="link-trace-route" role="tabpanel"
+                     aria-labelledby="link-trace-route-tab">
+                    <form class="form-inline mb-2 mt-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="trace-target-name" placeholder="Target name">
+                        </div>
+                        <button type="submit" class="btn btn-primary ml-2" id="trace-route-start">Run</button>
+                        <button class="btn btn-danger ml-2" id="trace-route-stop" disabled>Stop</button>
+                    </form>
+
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">IP</th>
+                            <th scope="col">RTT1</th>
+                            <th scope="col">RTT2</th>
+                            <th scope="col">RTT3</th>
+                        </tr>
+                        </thead>
+                        <tbody id="trace-route-results"></tbody>
+                    </table>
+                </div>
+
+                <!-- PING TAB -->
+                <div class="tab-pane fade" id="link-ping" role="tabpanel" aria-labelledby="link-ping-tab">
+
+
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Adding new tab</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Name" id="tab-name">
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="name-as-target" checked>
+                                        <label class="custom-control-label" for="name-as-target">Set tab name as target to ping</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="immediately-start" checked>
+                                        <label class="custom-control-label" for="immediately-start">Immediately start</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="add-tab">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="open-add-tab" href="#" role="tab" aria-controls="contact" aria-selected="false"
+                               data-toggle="modal" data-target="#exampleModalCenter">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent"></div>
+
+                    <!--<form class="form-inline mb-2 mt-2">-->
+                        <!--<div class="form-group">-->
+                            <!--<input type="text" class="form-control" id="ping-target-name" placeholder="Target name">-->
+                        <!--</div>-->
+                        <!--<button type="submit" class="btn btn-primary ml-2" id="ping-start">Run</button>-->
+                        <!--<button class="btn btn-danger ml-2" id="ping-stop" disabled>Stop</button>-->
+                    <!--</form>-->
+
+                    <!--<table class="table table-hover">-->
+                        <!--<thead class="thead-dark">-->
+                        <!--<tr>-->
+                            <!--<th scope="col">RESULTS</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody id="ping-results"></tbody>-->
+                    <!--</table>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require('./node_modules/jquery/dist/jquery.min.js');
+    require('./node_modules/bootstrap/dist/js/bootstrap');
+    require('./js/trace-route');
+    require('./js/ping');
+</script>
+</body>
+</html>

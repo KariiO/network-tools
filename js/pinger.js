@@ -1,29 +1,28 @@
 const {spawn} = require('child_process');
 const {EventEmitter} = require('events');
 const readline = require('readline');
-const validator = require('validator');
 const fs = require('fs');
 
 class Pinger extends EventEmitter {
-    constructor(target) {
+    constructor() {
         super();
 
         this.command = 'ping';
         this.args = ['-t'];
         this.process = null;
         this.writeStream = null;
-        this.target = target;
+        this._target = null;
+    }
 
-        if(this.isValidDomainName(target)) {
-            this.args.push(target);
-        } else {
-            throw new Error('Provided target to ping is not valid domain name nor ip.')
-        }
+    set target(value) {
+        this._target = value;
     }
 
     start() {
         this.handleLogsDir();
         this.handleLogsFile();
+
+        this.args.push(this._target);
 
         this.process = spawn(this.command, this.args);
         this.process.on('close', (code) => {
@@ -46,7 +45,12 @@ class Pinger extends EventEmitter {
 
     handleLogsDir() {
         const currentDate = new Date();
-        const dirName = `${currentDate.getDate()}_${currentDate.getMonth()}_${currentDate.getFullYear()}`;
+        const logsDirName = 'logs';
+        const dirName = `${logsDirName}/${currentDate.getDate()}_${currentDate.getMonth()}_${currentDate.getFullYear()}`;
+
+        if(!fs.existsSync(logsDirName)) {
+            fs.mkdir(logsDirName);
+        }
 
         if(!fs.existsSync(dirName)) {
             fs.mkdir(dirName);
@@ -55,18 +59,14 @@ class Pinger extends EventEmitter {
 
     handleLogsFile() {
         const currentDate = new Date();
-        const dirName = `${currentDate.getDate()}_${currentDate.getMonth()}_${currentDate.getFullYear()}`;
+        const dirName = `logs/${currentDate.getDate()}_${currentDate.getMonth()}_${currentDate.getFullYear()}`;
 
-        this.writeStream = fs.createWriteStream(`${dirName}/${this.target.replace('.', '_')}.txt`);
+        this.writeStream = fs.createWriteStream(`${dirName}/${this._target.replace('.', '_')}.txt`);
     }
 
     stop() {
         this.writeStream.end();
         this.process.kill('SIGINT');
-    }
-
-    isValidDomainName(target) {
-        return validator.isFQDN(target + '') || validator.isIP(target + '');
     }
 }
 

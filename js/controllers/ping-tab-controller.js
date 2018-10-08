@@ -1,4 +1,4 @@
-const PingerHandler = require('./pinger-handler');
+const PingerHandler = require('../pinger-handler');
 
 const addTabEl = document.getElementById("add-tab");
 const tabNameEl = document.getElementById("tab-name");

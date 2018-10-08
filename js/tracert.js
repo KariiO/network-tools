@@ -1,5 +1,7 @@
 'use strict';
 
+/* Based on: https://github.com/zulhilmizainuddin/nodejs-traceroute */
+
 const Process = require('./process');
 
 class Tracert extends Process {

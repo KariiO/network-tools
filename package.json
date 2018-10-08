@@ -1,17 +1,26 @@
 {
   "name": "network-tools",
   "version": "1.0.0",
-  "description": "",
+  "description": "Small Electron app with possibility to execute ping and trace route commands for Windows",
   "main": "index.js",
+  "build": {
+    "appId": "com.electron.network-tools",
+    "mac": {
+      "category": "network monitoring"
+    }
+  },
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "author": "",
+  "author": "Korneliusz Buczkowski",
   "license": "ISC",
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^2.0.7"
+    "electron": "^2.0.7",
+    "electron-builder": "^20.28.4"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",

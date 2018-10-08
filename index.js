@@ -1,10 +1,10 @@
 const {app, BrowserWindow} = require('electron');
-const devtron = require('devtron');
+// const devtron = require('devtron');
 let win;
 
 function createWindow() {
     // Devtron plugin - remove or add if statement only for debug version
-    devtron.install();
+    // devtron.install();
 
     win = new BrowserWindow({width: 1400, height: 700});
 

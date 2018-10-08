@@ -4,12 +4,8 @@
 @import "toastr.css";
 @import "nav.css";
 
-body {
-    /*background: #252827;*/
-}
-
-.main-container {
-    height: 100vh;
+body, html, .main-container, .row, .navigation {
+    height: 100%;
 }
 
 #open-add-tab {

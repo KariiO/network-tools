@@ -1,5 +1,6 @@
 const toastr = require('../node_modules/toastr/toastr');
 const Tracert = require('./tracert');
+const {initPingerHandler} = require("./controllers/ping-tab-controller");
 
 class TracertHandler {
     constructor(traceStartButtonElement, traceStopButtonElement, traceTargetNameEl, traceRouteResultsEl) {
@@ -68,11 +69,24 @@ class TracertHandler {
         const tdRtt3El = document.createElement('td');
         tdRtt3El.innerText = hopData.rtt3;
 
+        const tdActionsEl = document.createElement('td');
+        const startPingEl = document.createElement('button');
+        startPingEl.setAttribute('class', 'btn btn-success');
+        startPingEl.innerText = 'PING IT';
+        startPingEl.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            initPingerHandler(hopData.ip, hopData.ip, true);
+        });
+
+        tdActionsEl.appendChild(startPingEl);
+
         trEl.appendChild(thIdEl);
         trEl.appendChild(tdIpEl);
         trEl.appendChild(tdRtt1El);
         trEl.appendChild(tdRtt2El);
         trEl.appendChild(tdRtt3El);
+        trEl.appendChild(tdActionsEl);
 
         return trEl;
     }

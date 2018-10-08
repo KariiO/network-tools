@@ -38,7 +38,7 @@ class Pinger extends EventEmitter {
                 terminal: false
             }).on('line', (line) => {
                 this.writeStream.write(`[${new Date().toLocaleTimeString()}]${line}\n`);
-                this.emit('ping', line);
+                this.emit('ping', `[${new Date().toLocaleTimeString()}] ${line}`);
             });
         }
     }

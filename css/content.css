@@ -1,0 +1,8 @@
+.content {
+    grid-area: content;
+}
+
+.menu-expand {
+    display: none;
+    position: absolute;
+}

@@ -2,15 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Network Tools</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/content.css">
+    <link rel="stylesheet" href="css/media-query.css">
 </head>
 <body>
-<h1>Hello World!</h1>
-We are using Node.js <span id="node-version"></span>,
-Chromium <span id="chrome-version"></span>,
-and Electron <span id="electron-version"></span>.
+<div class="wrapper">
+    <nav class="sidebar">
+        <span class="menu-collapse">❎</span>
+        <ul class="nav-menu">
+            <li class="menu-item" data-tab="trace-route-tab">
+                <img class="menu-item-img" src="assets/icons/segment-path.svg" alt="Trace route icon">
+                <span class="menu-item-text">Trace route</span>
+            </li>
+            <li class="menu-item" data-tab="ping-host-tab">
+                <img class="menu-item-img" src="assets/icons/server.svg" alt="Trace route icon">
+                <span class="menu-item-text">Ping host</span>
+            </li>
+        </ul>
+    </nav>
+    <article class="content">
+        <span class="menu-expand">➡️</span>
+        <trace-route-tab></trace-route-tab>
+        <ping-host-tab></ping-host-tab>
+    </article>
+</div>
 
-<!-- You can also require other files to run in this process -->
-<script src="./renderer.js"></script>
+<script>
+    const {SET_TAB, store} = require('./js/redux');
+    const {TraceRoutePage} = require('./js/custom-elements/trace-route-tab');
+    const {PingHostPage} = require('./js/custom-elements/ping-host-tab');
+
+    // Handle sidebar expand/collapse
+    const sidebarExpandEl = document.querySelector('.menu-expand');
+    const sidebarCollapseEl = document.querySelector('.menu-collapse');
+    const sidebarEl = document.querySelector('.sidebar');
+
+    const toggleWrapper = () => sidebarEl.classList.toggle('toggled');
+
+    sidebarExpandEl.addEventListener('click', toggleWrapper);
+    sidebarCollapseEl.addEventListener('click', toggleWrapper);
+
+    document.querySelectorAll('li.menu-item').forEach(el => {
+        el.addEventListener('click', () => store.dispatch(SET_TAB({tab: el.dataset.tab})));
+    });
+
+    // Handle menu item selection + tab selection
+    store.subscribe(() => {
+        const {tab} = store.getState();
+
+        const activeMenuItemEl = document.querySelector('.menu-item.active');
+        const selectedMenuItemEl = document.querySelector(`[data-tab="${tab}"]`);
+
+        const activeTabEl = document.querySelector('[active]');
+        const selectedTabEl = document.querySelector(tab);
+
+        selectedTabEl.setAttribute('active', '');
+        selectedMenuItemEl.classList.add('active');
+
+        if (activeMenuItemEl && activeTabEl) {
+            activeMenuItemEl.classList.remove('active');
+            activeTabEl.removeAttribute('active');
+        }
+    });
+
+    // Custom Elements
+    window.customElements.define('trace-route-tab', TraceRoutePage);
+    window.customElements.define('ping-host-tab', PingHostPage);
+
+    // Initial tab set
+    store.dispatch(SET_TAB({tab: 'trace-route-tab'}));
+</script>
 </body>
 </html>

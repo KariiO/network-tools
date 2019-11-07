@@ -1,0 +1,18 @@
+/* Icon segment-path.svg used from https://www.flaticon.com/authors/freepik - Freepik */
+/* Icon server.svg used from https://www.flaticon.com/authors/smashicons - Smashicons */
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-areas: "sidebar content";
+    grid-template-columns: 200px auto;
+    grid-template-rows: 100vh;
+}

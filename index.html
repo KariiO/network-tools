@@ -60,6 +60,11 @@
         const activeTabEl = document.querySelector('[active]');
         const selectedTabEl = document.querySelector(tab);
 
+        // Prevent action on same menu item click
+        if (selectedMenuItemEl === activeMenuItemEl) {
+            return;
+        }
+
         selectedTabEl.setAttribute('active', '');
         selectedMenuItemEl.classList.add('active');
 

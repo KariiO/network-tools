@@ -23,11 +23,12 @@ tmpl.innerHTML = `
     
     .results {
         grid-area: results;
+        padding: 0 1em;
     }
     
     .form {
         grid-area: form;
-        padding: 0 2em;
+        padding: 0 1em;
     }
     
     .text-control {
@@ -41,65 +42,56 @@ tmpl.innerHTML = `
         margin-bottom: 12px;
         box-sizing: border-box; /* TODO: Investigate why this styles doesn't work from main.css */
     }
+    
+    table {
+        width: 100%;
+    }
+    
+    table, th, td {
+        border-collapse: collapse;
+        border:0;
+        color: #F4F4F4
+    }
+    
+    td {
+        background: #292929;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        color: gray;
+        font-size: 15px;
+        line-height: 1.4;
+        text-align: center;
+    }
+    
+    th {
+        font-size: 15px;
+        color: #DB5461;
+        line-height: 1.4;
+        text-transform: uppercase;
+        background-color: #1f1f1f;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+    
+    td:first-child, th:first-child {
+         border-left: none;
+    }
+
+    
 </style>
 <div class="wrapper">
     <div class="results">
-        <table border="1" id="customers">
-          <tr>
-            <th>Company</th>
-            <th>Contact</th>
-            <th>Country</th>
-          </tr>
-          <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Berglunds snabbköp</td>
-            <td>Christina Berglund</td>
-            <td>Sweden</td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-          <tr>
-            <td>Ernst Handel</td>
-            <td>Roland Mendel</td>
-            <td>Austria</td>
-          </tr>
-          <tr>
-            <td>Island Trading</td>
-            <td>Helen Bennett</td>
-            <td>UK</td>
-          </tr>
-          <tr>
-            <td>Königlich Essen</td>
-            <td>Philip Cramer</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Laughing Bacchus Winecellars</td>
-            <td>Yoshi Tannamuri</td>
-            <td>Canada</td>
-          </tr>
-          <tr>
-            <td>Magazzini Alimentari Riuniti</td>
-            <td>Giovanni Rovelli</td>
-            <td>Italy</td>
-          </tr>
-          <tr>
-            <td>North/South</td>
-            <td>Simon Crowther</td>
-            <td>UK</td>
-          </tr>
-          <tr>
-            <td>Paris spécialités</td>
-            <td>Marie Bertrand</td>
-            <td>France</td>
-          </tr>
+        <table id="output">
+            <thead>
+                <tr>
+                    <th>RTT1</th>
+                    <th>RTT2</th>
+                    <th>RTT3</th>
+                    <th>HOSTNAME</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
         </table>
     </div>
     <div class="form">
@@ -153,10 +145,10 @@ class TraceRouteTab extends HTMLElement {
         this._shadowRoot = this.attachShadow({mode: 'open'});
         this._shadowRoot.appendChild(tmpl.content.cloneNode(true));
 
-        this.attachEvents();
+        this.attachEventListeners();
     }
 
-    attachEvents() {
+    attachEventListeners() {
         const runEl = this._shadowRoot.querySelector('#run-btn');
 
         runEl.addEventListener('click', e => {
@@ -164,11 +156,45 @@ class TraceRouteTab extends HTMLElement {
 
             const traceRouteCommand = new TraceRouteCommand('tracert', ['8.8.8.8']);
 
-            traceRouteCommand.on('hop', console.log);
+            traceRouteCommand.on('hop', this.handleOnHopData.bind(this));
             traceRouteCommand.on('close', console.log);
 
             traceRouteCommand.run();
         });
+    }
+
+    /**
+     * Returns a coordinate from a given mouse or touch event
+     * @param {Object} data
+     * @param {Object|null} data.jsonOutput
+     * @param {string} data.jsonOutput.rtt1
+     * @param {string} data.jsonOutput.rtt2
+     * @param {string} data.jsonOutput.rtt3
+     * @param {string} data.jsonOutput.hostname
+     * @param {string} data.jsonOutput.ip
+     * @param {string} data.originalOutput
+     */
+    handleOnHopData(data) {
+        const tableEl = this._shadowRoot.querySelector('#output tbody');
+        console.log(data);
+
+        if (data.jsonOutput) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                    <td>${data.jsonOutput.rtt1}</td>
+                    <td>${data.jsonOutput.rtt2}</td>
+                    <td>${data.jsonOutput.rtt3}</td>
+                    <td>${data.jsonOutput.hostname}</td>
+                    <td>${data.jsonOutput.ip}</td>
+                    `;
+
+            tableEl.appendChild(tr);
+        } else if (data.originalOutput.length) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td colspan="5">${data.originalOutput}</td>`;
+
+            tableEl.appendChild(tr);
+        }
     }
 }
 
